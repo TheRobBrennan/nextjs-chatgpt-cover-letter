@@ -48,3 +48,20 @@ found 0 vulnerabilities
 Success! Created nextjs-chatgpt-cover-letter at /Users/rob/repos/nextjs-chatgpt-cover-letter/nextjs-chatgpt-cover-letter
 
 ```
+
+### Install dependencies
+
+Once you have created your Next.js app, navigate to the appropriate directory and verify you can start your development server:
+
+```sh
+% cd nextjs-chatgpt-cover-letter && npm run dev
+
+> nextjs-chatgpt-cover-letter@0.1.0 dev
+> next dev
+
+- ready started server on [::]:3000, url: http://localhost:3000
+- event compiled client and server successfully in 113 ms (20 modules)
+- wait compiling...
+- event compiled client and server successfully in 72 ms (20 modules)
+
+```
