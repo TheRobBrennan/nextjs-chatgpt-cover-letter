@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Cover letter generation
 import { saveAs } from "file-saver";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import Swal from "sweetalert2";
 import { openai } from "./util";
+
+// TODO: Remove after verifying Next.js server actions example works as expected
+import { getFriendlyGreetingFromTheServer } from "./actions";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
@@ -26,6 +29,14 @@ export default function Home() {
   console.log(
     `Using OpenAI API key ${process.env.NEXT_PUBLIC_OPENAI_SECRET_KEY}`
   );
+
+  // TODO: Remove after verifying Next.js server actions example works as expected
+  const [greeting, setGreeting] = useState("");
+  useEffect(() => {
+    getFriendlyGreetingFromTheServer(name).then((greeting) =>
+      setGreeting(greeting)
+    );
+  }, [name]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -129,6 +140,7 @@ export default function Home() {
         <h1 className="text-2xl sm:text-2xl md:text-3xl sm:text-2xl font-bold text-center">
           Cover Letter Generator
         </h1>
+        <h2>{greeting}</h2>
       </div>
       <div className="flex flex-col items-center justify-center h-screen">
         <div className="w-3/4 md:w-1/2">
