@@ -93,3 +93,5 @@ First, let's update [./nextjs-chatgpt-cover-letter/app/page.js](./nextjs-chatgpt
 Sign in to your Open AI account and generate a new API key at [https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys). Be sure to copy this value to use it in the next step.
 
 Create `nextjs-chatgpt-cover-letter/app/.env.local` by copying `nextjs-chatgpt-cover-letter/app/.env.local.sample` to `nextjs-chatgpt-cover-letter/app/.env.local` - replacing the environment variables as desired.
+
+Create the utility file that will allow us to connect to the OpenAI API using our secret key at `nextjs-chatgpt-cover-letter/app/util.js`
