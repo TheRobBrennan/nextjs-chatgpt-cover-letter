@@ -70,6 +70,9 @@ export default function Home() {
   Make it a maximum of three paragraphs. Make the words maximum of twenty words per line  
   Add ${name} as the name after the Remarks`;
 
+    // TODO: Crude implementation of data
+    const data = await fetch("api/openai").then((res) => res.json());
+
     // Send the prompt to the OpenAI API and retrieve the response
     openai
       .complete({
