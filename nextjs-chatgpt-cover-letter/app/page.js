@@ -20,6 +20,8 @@ export default function Home() {
   const [specialtyOne, setSpecialtyOne] = useState("React");
   const [specialtyTwo, setSpecialtyTwo] = useState("Next.js");
 
+  const COVER_LETTER_FILENAME = `${company}-${position}-${name}-${Date.now()}.pdf`;
+
   // TODO: This will be fixed in a future revision so that our secret key is not accessible or able to be exploited by the client
   console.log(
     `Using OpenAI API key ${process.env.NEXT_PUBLIC_OPENAI_SECRET_KEY}`
@@ -105,7 +107,7 @@ export default function Home() {
               color: rgb(0, 0.53, 0.71),
             });
             const pdfBytes = await pdfDoc.save();
-            saveAs(new Blob([pdfBytes.buffer]), "My_cover_letter.pdf");
+            saveAs(new Blob([pdfBytes.buffer]), COVER_LETTER_FILENAME);
           }
         }
       })
