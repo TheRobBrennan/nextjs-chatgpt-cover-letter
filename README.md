@@ -83,3 +83,5 @@ Let's add our dependencies.
 % npm install file-saver
 
 ```
+
+All that's left is to verify that your development server runs as expected with `npm run dev` 🤓
