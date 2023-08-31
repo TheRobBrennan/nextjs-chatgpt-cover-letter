@@ -18,7 +18,8 @@
       "request": "launch",
       "name": "Next.js frontend",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/nextjs-chatgpt-cover-letter"
+      "webRoot": "${workspaceFolder}/nextjs-chatgpt-cover-letter",
+      "cwd": "${workspaceFolder}/nextjs-chatgpt-cover-letter"
     }
   ],
   "compounds": [
