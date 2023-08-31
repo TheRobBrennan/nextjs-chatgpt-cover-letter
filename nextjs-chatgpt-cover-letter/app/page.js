@@ -10,13 +10,20 @@ import { openai } from "./util";
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [company, setCompany] = useState("");
-  const [degree, setDegree] = useState("");
-  const [position, setPosition] = useState("");
-  const [experience, setExperience] = useState("");
-  const [specialtyOne, setSpecialtyOne] = useState("");
-  const [specialtyTwo, setSpecialtyTwo] = useState("");
+  const [name, setName] = useState("Rob Brennan");
+  const [company, setCompany] = useState("Fly By Night Consulting Agency");
+  const [degree, setDegree] = useState(
+    "Computer Science - Information Systems"
+  );
+  const [position, setPosition] = useState("Senior Frontend React Engineer");
+  const [experience, setExperience] = useState("20");
+  const [specialtyOne, setSpecialtyOne] = useState("React");
+  const [specialtyTwo, setSpecialtyTwo] = useState("Next.js");
+
+  // TODO: This will be fixed in a future revision so that our secret key is not accessible or able to be exploited by the client
+  console.log(
+    `Using OpenAI API key ${process.env.NEXT_PUBLIC_OPENAI_SECRET_KEY}`
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
