@@ -85,3 +85,7 @@ Let's add our dependencies.
 ```
 
 All that's left is to verify that your development server runs as expected with `npm run dev` 🤓
+
+### Build the Cover Letter Writing App
+
+First, let's update [./nextjs-chatgpt-cover-letter/app/page.js](./nextjs-chatgpt-cover-letter/app/page.js) with a basic form for our cover letter generator.
