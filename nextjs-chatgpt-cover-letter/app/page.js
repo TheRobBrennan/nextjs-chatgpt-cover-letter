@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 
+// Cover letter generation
+import { saveAs } from "file-saver";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+import Swal from "sweetalert2";
+import { openai } from "./util";
+
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
@@ -11,8 +17,101 @@ export default function Home() {
   const [experience, setExperience] = useState("");
   const [specialtyOne, setSpecialtyOne] = useState("");
   const [specialtyTwo, setSpecialtyTwo] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Generate our cover letter
+    generateCoverLetter(
+      position,
+      company,
+      degree,
+      experience,
+      specialtyOne,
+      specialtyTwo
+    );
+  };
+
+  // Generate the cover letter using the OpenAI API
+  const generateCoverLetter = async (
+    position,
+    company,
+    degree,
+    experience,
+    specialty1,
+    specialty2
+  ) => {
+    // Set the loading state to true
+    setLoading(true);
+
+    // Construct the prompt for the OpenAI API
+    const prompt = `Please generate the body of a cover letter for a ${position} position at ${company}.
+  I have a degree in ${degree} with ${experience} years of experience(s) with a specialty in ${specialty1} and ${specialty2}. 
+  Make it a maximum of three paragraphs. Make the words maximum of twenty words per line  
+  Add ${name} as the name after the Remarks`;
+
+    // Send the prompt to the OpenAI API and retrieve the response
+    openai
+      .complete({
+        engine: "text-davinci-003",
+        prompt: prompt,
+        maxTokens: 1000,
+        temperature: 0.9,
+      })
+      .then(async (res) => {
+        if (res.status === 200) {
+          setLoading(false);
+          // If the response status is 200, update the state variables, create a PDF document and save it
+          if (res.status === 200) {
+            const pdfDoc = await PDFDocument.create();
+            const timesRomanFont = await pdfDoc.embedFont(
+              StandardFonts.TimesRoman
+            );
+            const page = pdfDoc.addPage([595.28, 841.89]);
+
+            const { width, height } = page.getSize();
+            const fontSize = 10;
+            const margin = 50;
+            let y = height - margin;
+            const words = res?.data?.choices[0]?.text.split(" ");
+            const lines = [];
+            let line = "";
+
+            for (const word of words) {
+              if ((line + word).length > 100) {
+                lines.push(line);
+                line = "";
+              }
+
+              line += `${word} `;
+            }
+
+            if (line.length > 0) {
+              lines.push(line);
+            }
+
+            page.drawText(lines.join("\n"), {
+              x: 50,
+              y: height - 4 * fontSize,
+              size: fontSize,
+              font: timesRomanFont,
+              color: rgb(0, 0.53, 0.71),
+            });
+            const pdfBytes = await pdfDoc.save();
+            saveAs(new Blob([pdfBytes.buffer]), "My_cover_letter.pdf");
+          }
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+
+        Swal.fire({
+          title: "Error!",
+          text: `${err}`,
+          icon: "error",
+          confirmButtonText: "ok",
+        });
+      });
   };
 
   return (
