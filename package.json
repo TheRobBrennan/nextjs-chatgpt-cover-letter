@@ -1,0 +1,15 @@
+{
+  "name": "nextjs-chatgpt-cover-letter",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "cd nextjs-chatgpt-cover-letter && npm run dev",
+    "start": "cd nextjs-chatgpt-cover-letter && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheRobBrennan/nextjs-chatgpt-cover-letter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/TheRobBrennan/nextjs-chatgpt-cover-letter/issues"
+  }
+}
