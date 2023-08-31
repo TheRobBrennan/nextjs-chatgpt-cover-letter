@@ -65,3 +65,21 @@ Once you have created your Next.js app, navigate to the appropriate directory an
 - event compiled client and server successfully in 72 ms (20 modules)
 
 ```
+
+Let's add our dependencies.
+
+```sh
+# openai package is a library provided by OpenAI that allows you to interact with their language models and APIs - https://www.npmjs.com/package/openai
+# openai-api package is a specific API client library provided by OpenAI - https://www.npmjs.com/package/openai-api
+% npm install openai openai-api
+
+# pdf-lib is a library that enables you to work with PDF files programmatically - https://www.npmjs.com/package/pdf-lib?activeTab=readme
+% npm install pdf-lib
+
+# sweetalert2 is a JavaScript library that provides beautiful and customizable popup dialogs, alerts, and modals - https://www.npmjs.com/package/sweetalert2
+% npm install sweetalert2
+
+# file-saver is a library that helps in saving files from the web to the user’s device - https://www.npmjs.com/package/file-saver
+% npm install file-saver
+
+```
