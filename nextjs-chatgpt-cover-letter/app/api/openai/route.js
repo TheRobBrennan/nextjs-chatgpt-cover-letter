@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import stringify from "json-stringify-safe";
 
 // OpenAI
 const OpenAI = require("openai-api");
@@ -10,7 +11,7 @@ export async function POST(request) {
     const postData = await request.json();
     const { prompt } = postData;
 
-    const json_response = await openai
+    const jsonResponse = await openai
       .complete({
         engine: "text-davinci-003",
         prompt,
@@ -21,7 +22,8 @@ export async function POST(request) {
         return res;
       });
 
-    return NextResponse.json(json_response, { status: 200 });
+    const safeResponse = stringify(jsonResponse);
+    return NextResponse.json(safeResponse, { status: 200 });
   } catch (error) {
     throw new Error(error);
   }

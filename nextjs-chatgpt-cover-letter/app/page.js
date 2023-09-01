@@ -72,64 +72,73 @@ export default function Home() {
 
     // TODO: Crude implementation of data
     // const data = await fetch("api/data").then((res) => res.json());
+
+    // Send the prompt to the OpenAI API and retrieve the response
     const data = await fetch("api/openai", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ prompt }),
-    });
-
-    // Send the prompt to the OpenAI API and retrieve the response
-    openai
-      .complete({
-        engine: "text-davinci-003",
-        prompt: prompt,
-        maxTokens: 1000,
-        temperature: 0.9,
+    })
+      .then((res) => {
+        return res.json();
       })
-      .then(async (res) => {
-        if (res.status === 200) {
-          setLoading(false);
-          // If the response status is 200, update the state variables, create a PDF document and save it
+      .then(async (stringifiedJSON) => {
+        try {
+          const res = JSON.parse(stringifiedJSON);
+
           if (res.status === 200) {
-            const pdfDoc = await PDFDocument.create();
-            const timesRomanFont = await pdfDoc.embedFont(
-              StandardFonts.TimesRoman
-            );
-            const page = pdfDoc.addPage([595.28, 841.89]);
+            setLoading(false);
+            // If the response status is 200, update the state variables, create a PDF document and save it
+            if (res.status === 200) {
+              const pdfDoc = await PDFDocument.create();
+              const timesRomanFont = await pdfDoc.embedFont(
+                StandardFonts.TimesRoman
+              );
+              const page = pdfDoc.addPage([595.28, 841.89]);
 
-            const { width, height } = page.getSize();
-            const fontSize = 10;
-            const margin = 50;
-            let y = height - margin;
-            const words = res?.data?.choices[0]?.text.split(" ");
-            const lines = [];
-            let line = "";
+              const { width, height } = page.getSize();
+              const fontSize = 10;
+              const margin = 50;
+              let y = height - margin;
+              const words = res?.data?.choices[0]?.text.split(" ");
+              const lines = [];
+              let line = "";
 
-            for (const word of words) {
-              if ((line + word).length > 100) {
-                lines.push(line);
-                line = "";
+              for (const word of words) {
+                if ((line + word).length > 100) {
+                  lines.push(line);
+                  line = "";
+                }
+
+                line += `${word} `;
               }
 
-              line += `${word} `;
-            }
+              if (line.length > 0) {
+                lines.push(line);
+              }
 
-            if (line.length > 0) {
-              lines.push(line);
+              page.drawText(lines.join("\n"), {
+                x: 50,
+                y: height - 4 * fontSize,
+                size: fontSize,
+                font: timesRomanFont,
+                color: rgb(0, 0.53, 0.71),
+              });
+              const pdfBytes = await pdfDoc.save();
+              saveAs(new Blob([pdfBytes.buffer]), COVER_LETTER_FILENAME);
             }
-
-            page.drawText(lines.join("\n"), {
-              x: 50,
-              y: height - 4 * fontSize,
-              size: fontSize,
-              font: timesRomanFont,
-              color: rgb(0, 0.53, 0.71),
-            });
-            const pdfBytes = await pdfDoc.save();
-            saveAs(new Blob([pdfBytes.buffer]), COVER_LETTER_FILENAME);
           }
+        } catch (err) {
+          setLoading(false);
+
+          Swal.fire({
+            title: "Error!",
+            text: `${err}`,
+            icon: "error",
+            confirmButtonText: "ok",
+          });
         }
       })
       .catch((err) => {
