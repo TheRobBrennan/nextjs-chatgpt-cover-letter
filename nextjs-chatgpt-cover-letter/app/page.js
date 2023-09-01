@@ -13,7 +13,7 @@ import { getFriendlyGreetingFromTheServer } from "./actions";
 export default function Home() {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("Rob Brennan");
-  const [company, setCompany] = useState("Fly By Night Consulting Agency");
+  const [company, setCompany] = useState("Fly By Night Consulting");
   const [degree, setDegree] = useState(
     "Computer Science with a primary focus on Information Systems"
   );
@@ -61,9 +61,7 @@ export default function Home() {
     setLoading(true);
 
     // Construct the prompt for the OpenAI API
-    const prompt = `Please generate the body of a cover letter for a ${position} position at ${company}. 
-    I have a degree in ${degree} with ${experience} years of experience(s) with a specialty in ${specialty1} and ${specialty2}. 
-    Make it a maximum of three paragraphs. Add ${name} as the name after the Cheers on a single line`;
+    const prompt = `Please generate the body of a cover letter for a ${position} position at ${company}. I have a degree in ${degree} with ${experience} years of experience(s) with a specialty in ${specialty1} and ${specialty2}. Make it a maximum of three paragraphs. Add ${name} as the name after the Cheers on a single line.`;
 
     // Send the prompt to the OpenAI API and retrieve the response
     const data = await fetch("api/openai", {
