@@ -3,8 +3,7 @@ import stringify from "json-stringify-safe";
 
 // OpenAI
 const OpenAI = require("openai-api");
-const OPENAI_SECRET_KEY = process.env.NEXT_PUBLIC_OPENAI_SECRET_KEY;
-const openai = new OpenAI(OPENAI_SECRET_KEY);
+const openai = new OpenAI(process.env.OPENAI_SECRET_KEY);
 
 export async function POST(request) {
   try {

@@ -6,9 +6,8 @@ import { useState, useEffect } from "react";
 import { saveAs } from "file-saver";
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import Swal from "sweetalert2";
-import { openai } from "./util";
 
-// TODO: Remove after verifying Next.js server actions example works as expected
+// EXPERIMENTAL: Next.js v13 server actions
 import { getFriendlyGreetingFromTheServer } from "./actions";
 
 export default function Home() {
@@ -16,21 +15,18 @@ export default function Home() {
   const [name, setName] = useState("Rob Brennan");
   const [company, setCompany] = useState("Fly By Night Consulting Agency");
   const [degree, setDegree] = useState(
-    "Computer Science - Information Systems"
+    "Computer Science with a primary focus on Information Systems"
   );
-  const [position, setPosition] = useState("Senior Frontend React Engineer");
+  const [position, setPosition] = useState("Senior Front-end React Engineer");
   const [experience, setExperience] = useState("20");
   const [specialtyOne, setSpecialtyOne] = useState("React");
   const [specialtyTwo, setSpecialtyTwo] = useState("Next.js");
 
-  const COVER_LETTER_FILENAME = `${company}-${position}-${name}-${Date.now()}.pdf`;
+  const COVER_LETTER_FILENAME = `${company.replace(
+    / /g,
+    ""
+  )}-${position.replace(/ /g, "")}-${name.replace(/ /g, "")}-${Date.now()}.pdf`;
 
-  // TODO: This will be fixed in a future revision so that our secret key is not accessible or able to be exploited by the client
-  console.log(
-    `Using OpenAI API key ${process.env.NEXT_PUBLIC_OPENAI_SECRET_KEY}`
-  );
-
-  // TODO: Remove after verifying Next.js server actions example works as expected
   const [greeting, setGreeting] = useState("");
   useEffect(() => {
     getFriendlyGreetingFromTheServer(name).then((greeting) =>
@@ -65,13 +61,9 @@ export default function Home() {
     setLoading(true);
 
     // Construct the prompt for the OpenAI API
-    const prompt = `Please generate the body of a cover letter for a ${position} position at ${company}.
-  I have a degree in ${degree} with ${experience} years of experience(s) with a specialty in ${specialty1} and ${specialty2}. 
-  Make it a maximum of three paragraphs. Make the words maximum of twenty words per line  
-  Add ${name} as the name after the Remarks`;
-
-    // TODO: Crude implementation of data
-    // const data = await fetch("api/data").then((res) => res.json());
+    const prompt = `Please generate the body of a cover letter for a ${position} position at ${company}. 
+    I have a degree in ${degree} with ${experience} years of experience(s) with a specialty in ${specialty1} and ${specialty2}. 
+    Make it a maximum of three paragraphs. Add ${name} as the name after the Cheers on a single line`;
 
     // Send the prompt to the OpenAI API and retrieve the response
     const data = await fetch("api/openai", {
@@ -281,7 +273,7 @@ export default function Home() {
                 className="  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                {loading ? "loading..." : "Generate Cover Letter"}
+                {loading ? "Loading..." : "Generate Cover Letter"}
               </button>
             </div>
           </form>
