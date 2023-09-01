@@ -71,7 +71,14 @@ export default function Home() {
   Add ${name} as the name after the Remarks`;
 
     // TODO: Crude implementation of data
-    const data = await fetch("api/data").then((res) => res.json());
+    // const data = await fetch("api/data").then((res) => res.json());
+    const data = await fetch("api/openai", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt }),
+    });
 
     // Send the prompt to the OpenAI API and retrieve the response
     openai
