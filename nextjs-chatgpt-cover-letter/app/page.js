@@ -15,9 +15,9 @@ export default function Home() {
   const [name, setName] = useState("Rob Brennan");
   const [company, setCompany] = useState("Fly By Night Consulting");
   const [degree, setDegree] = useState(
-    "Computer Science with a primary focus on Information Systems"
+    "Computer Science (with a primary focus on Information Systems)"
   );
-  const [position, setPosition] = useState("Senior Front-end React Engineer");
+  const [position, setPosition] = useState("Senior Frontend React Engineer");
   const [experience, setExperience] = useState("20");
   const [specialtyOne, setSpecialtyOne] = useState("React");
   const [specialtyTwo, setSpecialtyTwo] = useState("Next.js");
@@ -61,7 +61,11 @@ export default function Home() {
     setLoading(true);
 
     // Construct the prompt for the OpenAI API
-    const prompt = `Please generate the body of a cover letter for a ${position} position at ${company}. I have a degree in ${degree} with ${experience} years of experience(s) with a specialty in ${specialty1} and ${specialty2}. Make it a maximum of three paragraphs. Add ${name} as the name after the Cheers on a single line.`;
+    const prompt = `Please generate the body of a cover letter for a ${position} position at ${company}.
+    I have a degree in ${degree} with ${experience} years of experience(s) with a specialty in ${specialty1} and ${specialty2}. 
+    Requirements:
+    - Make it a maximum of five paragraphs. 
+    - Add ${name} as the name after the Cheers on a single line.`;
 
     // Send the prompt to the OpenAI API and retrieve the response
     const data = await fetch("api/openai", {
@@ -90,36 +94,54 @@ export default function Home() {
 
               const { width, height } = page.getSize();
               const fontSize = 10;
-              const margin = 50;
-              let y = height - margin;
-              const words = res?.data?.choices[0]?.text.split(" ");
-              const lines = [];
-              let line = "";
+              const margin = 40;
+              const text = res?.data?.choices[0]?.text;
+              const paragraphs = text.split("\n");
+              let y = height - 20;
 
-              for (const word of words) {
-                if ((line + word).length > 100) {
-                  lines.push(line);
-                  line = "";
+              for (const paragraph of paragraphs) {
+                const words = paragraph.split(" ");
+                const lines = [];
+                let line = "";
+
+                for (const word of words) {
+                  const newLine = line + word + " ";
+                  const lineWidth = timesRomanFont.widthOfTextAtSize(
+                    newLine,
+                    fontSize
+                  );
+                  if (lineWidth > width - 2 * margin) {
+                    lines.push(line);
+                    line = word + " ";
+                  } else {
+                    line = newLine;
+                  }
+                }
+                lines.push(line);
+
+                for (const line of lines) {
+                  page.drawText(line, {
+                    x: 50,
+                    y,
+                    size: fontSize,
+                    font: timesRomanFont,
+                    color: rgb(0, 0.53, 0.71),
+                  });
+                  y -= fontSize * 1.5;
                 }
 
-                line += `${word} `;
+                // y -= fontSize; // Add extra space between paragraphs
               }
 
-              if (line.length > 0) {
-                lines.push(line);
-              }
-
-              page.drawText(lines.join("\n"), {
-                x: 50,
-                y: height - 4 * fontSize,
-                size: fontSize,
-                font: timesRomanFont,
-                color: rgb(0, 0.53, 0.71),
-              });
+              // Save the PDF
               const pdfBytes = await pdfDoc.save();
               saveAs(new Blob([pdfBytes.buffer]), COVER_LETTER_FILENAME);
             }
           }
+
+          console.log(
+            `\n${COVER_LETTER_FILENAME} has been downloaded to the user's device.\n`
+          );
         } catch (err) {
           setLoading(false);
 
